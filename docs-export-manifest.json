@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "product": "AresWordSDK",
+  "publicationEnabled": false,
+  "scope": "Documentation only; this file inventories every other exported file and is not a native audit or a signature.",
+  "sha256": {
+    "CHANGELOG.md": "5157492178acb3fdbc4ba77637577903b916c17103352e9e999bbdf9fdfff789",
+    "NOTICE.md": "7d37a79ecf67c5de4edf66ddd2e9fe2ceaacbbb43c475b0390878bbbd67d7c07",
+    "README.md": "b1d6312c4050928380b54f11a23a951a8ecd48213eba5ea0d57cdd0aec6b3c02",
+    "SECURITY.md": "b18cd4cc129b6e55a6b6677be5d1780ee5048196e8d4dd0c8ad735ceb49e23a7",
+    "docs/api-reference.md": "dd5614cf5083189699bfff9a5a23c91094c31321e397df3ec51fc07c84553e86",
+    "docs/assets/screenshots/editor.png": "b317c616c12edf9e42ebc150d8f8ecef6102376b82536d45f8f4627b2d5e30e0",
+    "docs/assets/screenshots/scan-review.png": "5f6c059baaf95be4313b0fe11e5fb2e2f92258879de08c3c6fddfa600667e611",
+    "docs/compatibility.md": "a5856ae362a4628d1179a5e59ed3120a3df8b1693f66f6228cb253f4f48af485",
+    "docs/editor.md": "fed81ed65e26087796d19c1c81970cc9b7b229ff7c6703fb9406b827da7f6ced",
+    "docs/integration.md": "f8ea71bdb501ca36ca64f9db5b23fb50c8ef98fc301910b991c93268d477ee42",
+    "docs/licensing.md": "9333e0bcba251dc51027b705d0c5144b7d9845a6e640a62260a3cef4279911d7",
+    "docs/packaging.md": "2e10116178b7a6975c8ce5806d358e5df1d86bf44f733893d332ef386a8e731d",
+    "docs/platforms.md": "f356d9e99849ddf56919cb19af20284fa54f8847b8a514efa9acd386e0b424b7",
+    "docs/public-assets.json": "8ef6217610a238ede47b1b2c31337826fa7c0d15d21ac288c3adb0102c90d297",
+    "docs/release-status.md": "2a0c407265e8dcaf7f2dff698a9210496163c2f12016a827eb652fdebdb2a639",
+    "docs/scanning.md": "08bdbc48543836873b9777745bea0cfded36d21fb2a3ede90714514d3c6d99d9",
+    "docs/screenshots.md": "522b93e5726a1c31b85ed55fbd33dbbbc99fa0586f703f4048b64225daf4a6db",
+    "docs/security-and-assets.md": "e27fbb2ffa50b7e6f12b366aaf02254c2d1a68d0f696b8ab3cdbe0585e1b2dd3",
+    "examples/file_operations.dart": "0d67f60ee79ffdcb322e36c408f7c9c245d69d9608d51cb3641a90915524e6c1",
+    "examples/scan_and_edit.dart": "4a831580ba639034831744d04a50f212ef20460776120cafb9c917ed07a7e7bc",
+    "packaging/platforms.json": "fea3d415730499059e3758f1ab9d84c416918e6853dae9bd873700116d2aeeae",
+    "packaging/pubspec.yaml": "b750d260bdb760dc7f84b66d4bb112bca207ca33719e52c959c83f2a0db67020"
+  }
+}

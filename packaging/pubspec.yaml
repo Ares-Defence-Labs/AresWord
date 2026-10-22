@@ -1,0 +1,34 @@
+# Metadata blueprint only. Native adapters, dependencies and binaries are pending.
+# Do not remove publish_to until the release gates are independently reviewed.
+name: ares_word
+description: AresWord scanner, editor and document API for Flutter.
+version: 0.1.0-dev.1
+publish_to: none
+repository: https://github.com/Ares-Defence-Labs/AresWord
+homepage: https://github.com/Ares-Defence-Labs/AresWord
+documentation: https://github.com/Ares-Defence-Labs/AresWord/blob/main/docs/api-reference.md
+issue_tracker: https://github.com/Ares-Defence-Labs/AresWord/issues
+environment:
+  sdk: ^3.12.0
+  flutter: ">=3.44.0"
+dependencies:
+  flutter:
+    sdk: flutter
+platforms:
+  android:
+  ios:
+  macos:
+  windows:
+  linux:
+  web:
+topics:
+  - documents
+  - scanner
+  - office
+screenshots:
+  - description: Synthetic AresWord scan review in the actual SDK widget.
+    path: docs/assets/screenshots/scan-review.png
+  - description: Synthetic AresWord document in the actual SDK editor.
+    path: docs/assets/screenshots/editor.png
+# Paths above are relative to the future package root, not this blueprint folder.
+# Platforms describe the required editor/API target; scanner support is Android/iOS only.

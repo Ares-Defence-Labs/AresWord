@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "certified": false,
+  "editorPlatforms": [
+    "android",
+    "ios",
+    "macos",
+    "windows",
+    "linux",
+    "web"
+  ],
+  "documentApiPlatforms": [
+    "android",
+    "ios",
+    "macos",
+    "windows",
+    "linux",
+    "web"
+  ],
+  "scannerPlatforms": [
+    "android",
+    "ios"
+  ],
+  "status": "Release requirements; current desktop/browser licensing and adapter gaps remain open."
+}

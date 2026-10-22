@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "provenance": "Actual Flutter SDK widgets; synthetic fixtures; mocked native verification; no camera or admin certification",
+  "runtimeAssets": false,
+  "sha256": {
+    "docs/assets/screenshots/scan-review.png": "5f6c059baaf95be4313b0fe11e5fb2e2f92258879de08c3c6fddfa600667e611",
+    "docs/assets/screenshots/editor.png": "b317c616c12edf9e42ebc150d8f8ecef6102376b82536d45f8f4627b2d5e30e0"
+  }
+}
