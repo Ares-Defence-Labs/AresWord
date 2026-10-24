@@ -10,11 +10,46 @@ site must be validated against the protected candidate before release.
 ```dart
 AresWordSdk({required super.licenceKey, super.verifyLicence});
 
+Future<AresWordDocumentLayout> loadLayout(String path);
+
 Future<AresOfficeSaveResult> insertImage(
     String path, {
     required Uint8List bytes,
     required String fileName,
     required int afterSectionIndex,
+    String? expectedSourceFingerprint,
+  });
+
+Future<AresWordPicturesSnapshot> inspectPictures(String path);
+
+Future<AresOfficeSaveResult> replacePicture(
+    String path, {
+    required int pictureId,
+    required Uint8List bytes,
+    String? expectedSourceFingerprint,
+  });
+
+Future<AresOfficeSaveResult> setPictureMetadata(
+    String path, {
+    required int pictureId,
+    String? name,
+    String? title,
+    String? description,
+    String? expectedSourceFingerprint,
+  });
+
+Future<AresOfficeSaveResult> setPictureSize(
+    String path, {
+    required int pictureId,
+    required double widthPoints,
+    required double heightPoints,
+    bool lockAspectRatio = true,
+    String? expectedSourceFingerprint,
+  });
+
+Future<AresOfficeSaveResult> deletePicture(
+    String path, {
+    required int pictureId,
     String? expectedSourceFingerprint,
   });
 
@@ -395,6 +430,7 @@ void removeWordHyperlink(int sectionIndex);
 void insertWordTable(int afterIndex, int rows, int columns);
 void editWordTableAxis(int sectionIndex, int index, {required bool column, required bool insert});
 void resizeWordTable(int sectionIndex, int rows, int columns);
+void sortWordTable(int sectionIndex, {required List<AresWordTableSortKey> keys, int headerRows = 1});
 void setWordTableCell(int sectionIndex, int row, int column, String value, {int? fillColorArgb, String? verticalAlignment, String? textDirection, String? tableLayout, String? borderPreset, double? cellMarginPoints, double? columnWidthPoints, double? rowHeightPoints, String? rowHeightRule, bool? repeatHeaderRow, bool? preventRowSplit});
 void applyWordTableStylePreset(int sectionIndex, AresWordTableStylePreset preset);
 void mergeWordTableCells(int sectionIndex, String range, {bool split = false});

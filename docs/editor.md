@@ -9,6 +9,11 @@ round trips. This does not certify protected customer packages or full Microsoft
 feature parity. See [storage](storage.md) and [platforms](platforms.md).
 Windows runtime acceptance is tracked in [Windows validation](windows-validation.md).
 
+Landscape layouts expose Undo and Redo in the document bar. They restore saved
+package history as well as pending edits, respect read-only/host policy and are
+disabled while a file operation is busy. Compact bars place fit/zoom actions in
+a Zoom menu to keep history controls usable without overflowing.
+
 `AresWordEditor(sdk: sdk, documentPath: path)` embeds the domain editor and its
 editing controls. It checks the SDK licence and the document domain before
 loading. Use an absolute native path, or a virtual path returned by browser storage.
@@ -33,3 +38,17 @@ callback does not mean every Microsoft feature is implemented.
 Use the same SDK configuration for scanner, loader, writer and editor. Customer
 examples must not inject a mock verifier or owner mode. See [API declarations](api-reference.md)
 for constructor options and [compatibility limits](compatibility.md).
+
+## Word native pictures
+
+Insert → Pictures manages supported main-story inline rasters. Replace image,
+Picture size, Alternative text and Delete picture use guarded staged saves and
+saved undo/redo. Picture size uses point dimensions and a proportional lock;
+unlocking explicitly permits stretch. Normal/live inline previews use the saved
+size. Native resize locks and unsupported transforms/positioned frames refuse.
+Names/title/description are native metadata; accessible labels prefer description,
+then title, then name. Replacement preserves frame and shared resources; deletion
+preserves surrounding text/bookmarks. Old media remains retained. Managed Ares
+ink/redaction/photo-text resources use their own editors. Floating/VML, controls,
+historical/alternate content and other stories are not handled by this route.
+See [native picture APIs and limits](low-level-api.md#managed-native-pictures-and-powerpoint-media).

@@ -23,11 +23,15 @@ change is not proof that every Word layout rule is rendered identically.
 
 | Workflow | Session operations | Limits |
 | --- | --- | --- |
-| Tables | `insertWordTable`, `setWordTableCell`, resize/axis/style/merge operations | Validate dimensions; unsupported merged/linked structures can reject edits. |
+| Tables | `insertWordTable`, `setWordTableCell`, `sortWordTable`, resize/axis/style/merge operations | Validate dimensions; unsupported merged/linked structures can reject edits. |
 | Breaks | `insertWordBreak`, `insertWordPageBreakAtTextRange` | Logical sections are not rendered pages. |
 | Headers/footers | `setWordHeaderFooter`, `setWordPageNumbers` | Supported native variants; complex section/pagination parity remains open. |
 | Links | Insert/update/remove Word hyperlinks | Link text and address are document data; host must handle unsafe targets. |
 | Forms | Insert/update/duplicate/delete form fields, values and tab order | Supported native controls only; not every Word automation/control type. |
+
+[Native table sorting](table-sorting.md) supports up to three text/number/date keys
+and leading headers while moving whole native rows. Language/date sorting and
+complex imported structures remain unfinished.
 
 [Compilable authoring recipe](../examples/document_workflows.dart) inserts a
 paragraph and table, formats a text range and saves a reopened document. It

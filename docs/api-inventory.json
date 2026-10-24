@@ -279,7 +279,7 @@
     {
       "name": "AresOfficeDocumentException",
       "origin": "package:ares_office_core/src/office_document.dart",
-      "declaration": "class AresOfficeDocumentException",
+      "declaration": "class AresOfficeDocumentException implements Exception",
       "members": [
         "const AresOfficeDocumentException(this.message, {this.cause});",
         "final String message;",
@@ -387,6 +387,7 @@
         "void insertWordTable(int afterIndex, int rows, int columns);",
         "void editWordTableAxis(int sectionIndex, int index, {required bool column, required bool insert});",
         "void resizeWordTable(int sectionIndex, int rows, int columns);",
+        "void sortWordTable(int sectionIndex, {required List<AresWordTableSortKey> keys, int headerRows = 1});",
         "void setWordTableCell(int sectionIndex, int row, int column, String value, {int? fillColorArgb, String? verticalAlignment, String? textDirection, String? tableLayout, String? borderPreset, double? cellMarginPoints, double? columnWidthPoints, double? rowHeightPoints, String? rowHeightRule, bool? repeatHeaderRow, bool? preventRowSplit});",
         "void applyWordTableStylePreset(int sectionIndex, AresWordTableStylePreset preset);",
         "void mergeWordTableCells(int sectionIndex, String range, {bool split = false});",
@@ -419,6 +420,8 @@
         "void applyTransitionToAll(int sectionIndex);",
         "int addPresentationFreeform(int sectionIndex, AresFreeformPath path, {String text = '', double x = 72, double y = 72, double width = 240, double height = 180});",
         "void setPresentationFreeform(int sectionIndex, int objectId, AresFreeformPath path);",
+        "void movePresentationFreeformHandle(int sectionIndex, int objectId, int vertexIndex, {required bool incoming, required Offset position, AresFreeformHandleConstraint constraint = AresFreeformHandleConstraint.independent});",
+        "void splitPresentationFreeformSegment(int sectionIndex, int objectId, int segmentIndex, {double t = .5});",
         "void editPresentationXml(int sectionIndex, String Function(String source) edit, {String? slideLayoutPath});",
         "void updatePresentationOutline(Map<int, Map<int, String>> textBySlide, {Map<int, Map<int, List<int>>> paragraphLevelsBySlide = const <int, Map<int, List<int>>>{}});",
         "void changePresentationTextCase(int sectionIndex, String mode);",
@@ -612,7 +615,7 @@
     {
       "name": "AresOfficeLicenceException",
       "origin": "package:ares_office_core/src/sdk/ares_domain_sdk.dart",
-      "declaration": "class AresOfficeLicenceException",
+      "declaration": "class AresOfficeLicenceException implements Exception",
       "members": [
         "const AresOfficeLicenceException(this.product);",
         "final AresOfficeProduct product;",
@@ -791,7 +794,7 @@
     {
       "name": "AresOfficePlatforms",
       "origin": "package:ares_office_core/src/sdk/ares_office_platforms.dart",
-      "declaration": "class AresOfficePlatforms",
+      "declaration": "abstract final class AresOfficePlatforms",
       "members": [
         "static const Set<AresOfficePlatform> editorTargets;",
         "static const Set<AresOfficePlatform> documentApiTargets;",
@@ -1030,7 +1033,7 @@
     {
       "name": "AresOfficeStorage",
       "origin": "package:ares_office_core/src/storage/ares_office_storage.dart",
-      "declaration": "class AresOfficeStorage",
+      "declaration": "abstract final class AresOfficeStorage",
       "members": [
         "static Future<String> importBytes({required String name, required List<int> bytes, String? path, bool overwrite = false});",
         "static Future<String> open(String path);",
@@ -1050,7 +1053,7 @@
     {
       "name": "AresOfficeStorageException",
       "origin": "package:ares_office_core/src/storage/office_storage_error.dart",
-      "declaration": "class AresOfficeStorageException",
+      "declaration": "class AresOfficeStorageException implements Exception",
       "members": [
         "const AresOfficeStorageException(this.message);",
         "final String message;",
@@ -1276,7 +1279,7 @@
     {
       "name": "AresWordBlock",
       "origin": "package:ares_office_core/src/word_file_preview.dart",
-      "declaration": "class AresWordBlock",
+      "declaration": "sealed class AresWordBlock",
       "members": [
         "const AresWordBlock({required this.sectionIndex});",
         "final int? sectionIndex;"
@@ -1515,7 +1518,8 @@
       "declaration": "class AresWordDocumentParser",
       "members": [
         "const AresWordDocumentParser();",
-        "Future<AresWordDocumentLayout> parse(File file);"
+        "Future<AresWordDocumentLayout> parse(File file);",
+        "Future<AresWordDocumentLayout> parseBytes(Uint8List bytes);"
       ]
     },
     {
@@ -1840,6 +1844,31 @@
       ]
     },
     {
+      "name": "AresWordPicture",
+      "origin": "package:ares_office_core/src/office_word_pictures.dart",
+      "declaration": "class AresWordPicture",
+      "members": [
+        "const AresWordPicture({required this.id, required this.name, required this.title, required this.description, required this.widthPoints, required this.heightPoints, required this.bytes});",
+        "final int id;",
+        "final String name, title, description;",
+        "final double widthPoints, heightPoints;",
+        "final Uint8List bytes;"
+      ]
+    },
+    {
+      "name": "AresWordPicturesSnapshot",
+      "origin": "package:ares_office_core/src/office_word_pictures.dart",
+      "declaration": "class AresWordPicturesSnapshot",
+      "members": [
+        "const AresWordPicturesSnapshot({required this.pictures, required this.unsupportedPictures, required this.sourceFingerprint, this.restriction});",
+        "final List<AresWordPicture> pictures;",
+        "final int unsupportedPictures;",
+        "final String sourceFingerprint;",
+        "final String? restriction;",
+        "bool get canEdit;"
+      ]
+    },
+    {
       "name": "AresWordRedactionGeometry",
       "origin": "package:ares_office_core/src/word_file_preview.dart",
       "declaration": "typedef AresWordRedactionGeometry = ({List<AresWordCharacterPageBounds> characters, List<AresWordImagePageBounds> images});",
@@ -1955,7 +1984,13 @@
       "declaration": "class AresWordSdk extends AresDomainSdk",
       "members": [
         "AresWordSdk({required super.licenceKey, super.verifyLicence});",
+        "Future<AresWordDocumentLayout> loadLayout(String path);",
         "Future<AresOfficeSaveResult> insertImage(String path, {required Uint8List bytes, required String fileName, required int afterSectionIndex, String? expectedSourceFingerprint});",
+        "Future<AresWordPicturesSnapshot> inspectPictures(String path);",
+        "Future<AresOfficeSaveResult> replacePicture(String path, {required int pictureId, required Uint8List bytes, String? expectedSourceFingerprint});",
+        "Future<AresOfficeSaveResult> setPictureMetadata(String path, {required int pictureId, String? name, String? title, String? description, String? expectedSourceFingerprint});",
+        "Future<AresOfficeSaveResult> setPictureSize(String path, {required int pictureId, required double widthPoints, required double heightPoints, bool lockAspectRatio = true, String? expectedSourceFingerprint});",
+        "Future<AresOfficeSaveResult> deletePicture(String path, {required int pictureId, String? expectedSourceFingerprint});",
         "Future<AresWordCommentsSnapshot> inspectComments(String path);",
         "Future<List<AresWordComment>> comments(String path);",
         "Future<AresWordCommentCreationResult> addComment(String path, {required int sectionIndex, required String text, required String author, String? initials, int? startOffset, int? endOffset, DateTime? date, String? expectedSourceFingerprint});",
@@ -2053,6 +2088,12 @@
       "members": []
     },
     {
+      "name": "AresWordTableDateFormat",
+      "origin": "package:ares_office_core/src/office_word_table_sort.dart",
+      "declaration": "enum AresWordTableDateFormat { yearMonthDay, dayMonthYear, monthDayYear }",
+      "members": []
+    },
+    {
       "name": "AresWordTableRow",
       "origin": "package:ares_office_core/src/word_file_preview.dart",
       "declaration": "class AresWordTableRow",
@@ -2063,6 +2104,33 @@
         "final String heightRule;",
         "final bool repeatAsHeader;",
         "final bool preventPageBreak;"
+      ]
+    },
+    {
+      "name": "AresWordTableSortKey",
+      "origin": "package:ares_office_core/src/office_word_table_sort.dart",
+      "declaration": "class AresWordTableSortKey",
+      "members": [
+        "const AresWordTableSortKey(this.column, {this.type = AresWordTableSortType.text, this.descending = false, this.caseSensitive = false, this.dateFormat = AresWordTableDateFormat.yearMonthDay});",
+        "final int column;",
+        "final AresWordTableSortType type;",
+        "final AresWordTableDateFormat dateFormat;",
+        "final bool descending, caseSensitive;"
+      ]
+    },
+    {
+      "name": "AresWordTableSortType",
+      "origin": "package:ares_office_core/src/office_word_table_sort.dart",
+      "declaration": "enum AresWordTableSortType { text, number, date }",
+      "members": []
+    },
+    {
+      "name": "AresWordTableSorting",
+      "origin": "package:ares_office_core/src/office_word_table_sort.dart",
+      "declaration": "abstract final class AresWordTableSorting",
+      "members": [
+        "static List<int> order(List<List<String>> cells, {required List<AresWordTableSortKey> keys, int headerRows = 1});",
+        "static String reorder(String source, List<int> order);"
       ]
     },
     {
@@ -2199,6 +2267,7 @@
         "void insertWordTable(int afterIndex, int rows, int columns);",
         "void editWordTableAxis(int sectionIndex, int index, {required bool column, required bool insert});",
         "void resizeWordTable(int sectionIndex, int rows, int columns);",
+        "void sortWordTable(int sectionIndex, {required List<AresWordTableSortKey> keys, int headerRows = 1});",
         "void setWordTableCell(int sectionIndex, int row, int column, String value, {int? fillColorArgb, String? verticalAlignment, String? textDirection, String? tableLayout, String? borderPreset, double? cellMarginPoints, double? columnWidthPoints, double? rowHeightPoints, String? rowHeightRule, bool? repeatHeaderRow, bool? preventRowSplit});",
         "void applyWordTableStylePreset(int sectionIndex, AresWordTableStylePreset preset);",
         "void mergeWordTableCells(int sectionIndex, String range, {bool split = false});",
@@ -2231,6 +2300,8 @@
         "void applyTransitionToAll(int sectionIndex);",
         "int addPresentationFreeform(int sectionIndex, AresFreeformPath path, {String text = '', double x = 72, double y = 72, double width = 240, double height = 180});",
         "void setPresentationFreeform(int sectionIndex, int objectId, AresFreeformPath path);",
+        "void movePresentationFreeformHandle(int sectionIndex, int objectId, int vertexIndex, {required bool incoming, required Offset position, AresFreeformHandleConstraint constraint = AresFreeformHandleConstraint.independent});",
+        "void splitPresentationFreeformSegment(int sectionIndex, int objectId, int segmentIndex, {double t = .5});",
         "void editPresentationXml(int sectionIndex, String Function(String source) edit, {String? slideLayoutPath});",
         "void updatePresentationOutline(Map<int, Map<int, String>> textBySlide, {Map<int, Map<int, List<int>>> paragraphLevelsBySlide = const <int, Map<int, List<int>>>{}});",
         "void changePresentationTextCase(int sectionIndex, String mode);",

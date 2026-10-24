@@ -62,6 +62,29 @@ Future<void> redefineVisibleBookmark(AresWordSdk sdk, String path, int targetSec
     expectedSourceFingerprint: document.sourceFingerprint);
 }
 
+// Requires a simple table with at least two columns at tableSectionIndex.
+Future<AresOfficeDocument> sortDocumentTable(AresWordSdk sdk, String path,
+    int tableSectionIndex) async {
+  final session = await sdk.edit(await sdk.load(path));
+  try {
+    session.sortWordTable(tableSectionIndex, headerRows: 1,
+      keys: const [AresWordTableSortKey(0),
+        AresWordTableSortKey(1, type: AresWordTableSortType.number, descending: true)]);
+    return (await sdk.save(session)).document;
+  } finally { session.dispose(); }
+}
+
+// Inspect the chosen column and explicitly match its calendar format.
+Future<AresOfficeDocument> sortDocumentDates(AresWordSdk sdk, String path,
+    int tableSectionIndex, int column, AresWordTableDateFormat format) async {
+  final session = await sdk.edit(await sdk.load(path));
+  try {
+    session.sortWordTable(tableSectionIndex, keys: [AresWordTableSortKey(column,
+      type: AresWordTableSortType.date, dateFormat: format)]);
+    return (await sdk.save(session)).document;
+  } finally { session.dispose(); }
+}
+
 // User explicitly chooses one supported revision after inspecting its metadata.
 Future<void> acceptFirstSupportedRevision(AresWordSdk sdk, String path) async {
   final document = await sdk.load(path);

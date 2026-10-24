@@ -3,8 +3,8 @@
   "provenance": "Actual Flutter SDK widgets; synthetic fixtures; mocked native verification; no camera or admin certification",
   "runtimeAssets": false,
   "sha256": {
-    "docs/assets/screenshots/scan-review.png": "5f6c059baaf95be4313b0fe11e5fb2e2f92258879de08c3c6fddfa600667e611",
-    "docs/assets/screenshots/editor.png": "b317c616c12edf9e42ebc150d8f8ecef6102376b82536d45f8f4627b2d5e30e0",
+    "docs/assets/screenshots/scan-review.png": "e2efd0fb693423aa39094fef3498257df55cf92e6886df10f1f86800e87daa38",
+    "docs/assets/screenshots/editor.png": "57bf58d65df0456bc0ff7f03cd9cde8ebe77dde5ee19ae129b41b5348f99ab7c",
     "branding/ares-defence-labs-banner.png": "d8eb4b1a772e83b67f1f83024a25525ed317f2ec9016623a8a5e75d2a3fbec16",
     "branding/google-play-badge.png": "c4f2bff46b8bc67660f26f6271705ed50c3f241fcec66844fcb2b7951fb9234a",
     "branding/app-store-badge.png": "08930fb685af363710c652957b7f3860eb327f6d83e983f2b6c6f6a57fa6dbeb"

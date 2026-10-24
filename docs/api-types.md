@@ -6,7 +6,7 @@ This is generated from the current canonical full import, not a hand-written cla
 
 Use [SDK constructors and operations](api-reference.md), [managed lifecycle](low-level-api.md) and [domain recipes](document-authoring.md) alongside this reference.
 
-**166 named exported declarations.** Machine-readable: [API inventory](api-inventory.json).
+**172 named exported declarations.** Machine-readable: [API inventory](api-inventory.json).
 
 ## AresDomainSdk
 
@@ -316,7 +316,7 @@ AresOfficeDocument copyWith({String? path, AresOfficeDocumentType? type, List<Ar
 `package:ares_office_core/src/office_document.dart`
 
 ```dart
-class AresOfficeDocumentException
+class AresOfficeDocumentException implements Exception
 const AresOfficeDocumentException(this.message, {this.cause});
 final String message;
 final Object? cause;
@@ -428,6 +428,7 @@ void removeWordHyperlink(int sectionIndex);
 void insertWordTable(int afterIndex, int rows, int columns);
 void editWordTableAxis(int sectionIndex, int index, {required bool column, required bool insert});
 void resizeWordTable(int sectionIndex, int rows, int columns);
+void sortWordTable(int sectionIndex, {required List<AresWordTableSortKey> keys, int headerRows = 1});
 void setWordTableCell(int sectionIndex, int row, int column, String value, {int? fillColorArgb, String? verticalAlignment, String? textDirection, String? tableLayout, String? borderPreset, double? cellMarginPoints, double? columnWidthPoints, double? rowHeightPoints, String? rowHeightRule, bool? repeatHeaderRow, bool? preventRowSplit});
 void applyWordTableStylePreset(int sectionIndex, AresWordTableStylePreset preset);
 void mergeWordTableCells(int sectionIndex, String range, {bool split = false});
@@ -460,6 +461,8 @@ void mergeCells(int sectionIndex, AresSpreadsheetRange range, {bool remove = fal
 void applyTransitionToAll(int sectionIndex);
 int addPresentationFreeform(int sectionIndex, AresFreeformPath path, {String text = '', double x = 72, double y = 72, double width = 240, double height = 180});
 void setPresentationFreeform(int sectionIndex, int objectId, AresFreeformPath path);
+void movePresentationFreeformHandle(int sectionIndex, int objectId, int vertexIndex, {required bool incoming, required Offset position, AresFreeformHandleConstraint constraint = AresFreeformHandleConstraint.independent});
+void splitPresentationFreeformSegment(int sectionIndex, int objectId, int segmentIndex, {double t = .5});
 void editPresentationXml(int sectionIndex, String Function(String source) edit, {String? slideLayoutPath});
 void updatePresentationOutline(Map<int, Map<int, String>> textBySlide, {Map<int, Map<int, List<int>>> paragraphLevelsBySlide = const <int, Map<int, List<int>>>{}});
 void changePresentationTextCase(int sectionIndex, String mode);
@@ -671,7 +674,7 @@ static Future<bool> verify(AresOfficeProduct product, String licenceKey);
 `package:ares_office_core/src/sdk/ares_domain_sdk.dart`
 
 ```dart
-class AresOfficeLicenceException
+class AresOfficeLicenceException implements Exception
 const AresOfficeLicenceException(this.product);
 final AresOfficeProduct product;
 String toString();
@@ -867,7 +870,7 @@ enum AresOfficePlatform { android, ios, macos, windows, linux, web }
 `package:ares_office_core/src/sdk/ares_office_platforms.dart`
 
 ```dart
-class AresOfficePlatforms
+abstract final class AresOfficePlatforms
 static const Set<AresOfficePlatform> editorTargets;
 static const Set<AresOfficePlatform> documentApiTargets;
 static const Set<AresOfficePlatform> scannerTargets;
@@ -1132,7 +1135,7 @@ Future<String> extractText(AresOfficeDocument document, {required String outputP
 `package:ares_office_core/src/storage/ares_office_storage.dart`
 
 ```dart
-class AresOfficeStorage
+abstract final class AresOfficeStorage
 static Future<String> importBytes({required String name, required List<int> bytes, String? path, bool overwrite = false});
 static Future<String> open(String path);
 static Future<Uint8List> readBytes(String path);
@@ -1154,7 +1157,7 @@ const AresOfficeStorageConflict();
 `package:ares_office_core/src/storage/office_storage_error.dart`
 
 ```dart
-class AresOfficeStorageException
+class AresOfficeStorageException implements Exception
 const AresOfficeStorageException(this.message);
 final String message;
 String toString();
@@ -1405,7 +1408,7 @@ enum AresSlideChartKind { column, line, pie, doughnut, bar, stackedColumn, stack
 `package:ares_office_core/src/word_file_preview.dart`
 
 ```dart
-class AresWordBlock
+sealed class AresWordBlock
 const AresWordBlock({required this.sectionIndex});
 final int? sectionIndex;
 ```
@@ -1672,6 +1675,7 @@ String get description;
 class AresWordDocumentParser
 const AresWordDocumentParser();
 Future<AresWordDocumentLayout> parse(File file);
+Future<AresWordDocumentLayout> parseBytes(Uint8List bytes);
 ```
 
 ## AresWordDocumentSettings
@@ -2030,6 +2034,33 @@ bool get rightToLeftValue;
 double get lineHeightValue;
 ```
 
+## AresWordPicture
+
+`package:ares_office_core/src/office_word_pictures.dart`
+
+```dart
+class AresWordPicture
+const AresWordPicture({required this.id, required this.name, required this.title, required this.description, required this.widthPoints, required this.heightPoints, required this.bytes});
+final int id;
+final String name, title, description;
+final double widthPoints, heightPoints;
+final Uint8List bytes;
+```
+
+## AresWordPicturesSnapshot
+
+`package:ares_office_core/src/office_word_pictures.dart`
+
+```dart
+class AresWordPicturesSnapshot
+const AresWordPicturesSnapshot({required this.pictures, required this.unsupportedPictures, required this.sourceFingerprint, this.restriction});
+final List<AresWordPicture> pictures;
+final int unsupportedPictures;
+final String sourceFingerprint;
+final String? restriction;
+bool get canEdit;
+```
+
 ## AresWordRedactionGeometry
 
 `package:ares_office_core/src/word_file_preview.dart`
@@ -2157,7 +2188,13 @@ Widget build(BuildContext context);
 ```dart
 class AresWordSdk extends AresDomainSdk
 AresWordSdk({required super.licenceKey, super.verifyLicence});
+Future<AresWordDocumentLayout> loadLayout(String path);
 Future<AresOfficeSaveResult> insertImage(String path, {required Uint8List bytes, required String fileName, required int afterSectionIndex, String? expectedSourceFingerprint});
+Future<AresWordPicturesSnapshot> inspectPictures(String path);
+Future<AresOfficeSaveResult> replacePicture(String path, {required int pictureId, required Uint8List bytes, String? expectedSourceFingerprint});
+Future<AresOfficeSaveResult> setPictureMetadata(String path, {required int pictureId, String? name, String? title, String? description, String? expectedSourceFingerprint});
+Future<AresOfficeSaveResult> setPictureSize(String path, {required int pictureId, required double widthPoints, required double heightPoints, bool lockAspectRatio = true, String? expectedSourceFingerprint});
+Future<AresOfficeSaveResult> deletePicture(String path, {required int pictureId, String? expectedSourceFingerprint});
 Future<AresWordCommentsSnapshot> inspectComments(String path);
 Future<List<AresWordComment>> comments(String path);
 Future<AresWordCommentCreationResult> addComment(String path, {required int sectionIndex, required String text, required String author, String? initials, int? startOffset, int? endOffset, DateTime? date, String? expectedSourceFingerprint});
@@ -2267,6 +2304,14 @@ typedef AresWordTableCellBuilder = Widget Function(int sectionIndex, int row, in
 typedef AresWordTableCellCaretRequest = void Function(int sectionIndex, int row, int column, int textOffset);
 ```
 
+## AresWordTableDateFormat
+
+`package:ares_office_core/src/office_word_table_sort.dart`
+
+```dart
+enum AresWordTableDateFormat { yearMonthDay, dayMonthYear, monthDayYear }
+```
+
 ## AresWordTableRow
 
 `package:ares_office_core/src/word_file_preview.dart`
@@ -2279,6 +2324,37 @@ final double? minimumHeightPoints;
 final String heightRule;
 final bool repeatAsHeader;
 final bool preventPageBreak;
+```
+
+## AresWordTableSortKey
+
+`package:ares_office_core/src/office_word_table_sort.dart`
+
+```dart
+class AresWordTableSortKey
+const AresWordTableSortKey(this.column, {this.type = AresWordTableSortType.text, this.descending = false, this.caseSensitive = false, this.dateFormat = AresWordTableDateFormat.yearMonthDay});
+final int column;
+final AresWordTableSortType type;
+final AresWordTableDateFormat dateFormat;
+final bool descending, caseSensitive;
+```
+
+## AresWordTableSortType
+
+`package:ares_office_core/src/office_word_table_sort.dart`
+
+```dart
+enum AresWordTableSortType { text, number, date }
+```
+
+## AresWordTableSorting
+
+`package:ares_office_core/src/office_word_table_sort.dart`
+
+```dart
+abstract final class AresWordTableSorting
+static List<int> order(List<List<String>> cells, {required List<AresWordTableSortKey> keys, int headerRows = 1});
+static String reorder(String source, List<int> order);
 ```
 
 ## AresWordTableStylePreset

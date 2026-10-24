@@ -34,7 +34,12 @@ binding exists. Never insert an origin string or boolean verifier as a substitut
 Browser clients cannot keep signing secrets. [Licensing](licensing.md)
 
 The source imports compile for web and synthetic API/editor round trips have
-passed; this does not certify an installable protected runtime. Final browser
+passed. Source widget fixtures cover Word picture sizing/alternative text and
+Excel/PowerPoint direct typing, focus continuity, saved undo/redo, IndexedDB
+reopen and read-only guards at narrow and desktop widths. These fixtures use
+synthetic data, a source-processing loader and a local bridge to real font bytes;
+they do not exercise issued customer/admin grants or production asset delivery.
+This does not certify an installable protected runtime. Final browser
 runtime/asset delivery and supported minimum browser versions remain release
 gates. Do not copy PDF Wasm files, native artifacts or hosting instructions into
 an Office deployment and assume they apply. [Platform evidence](platforms.md)
