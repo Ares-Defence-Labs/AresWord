@@ -3,12 +3,16 @@
 The editor must support **Android, iOS, macOS, Windows, Linux and web**, with
 the same document features and file round-trip behavior. The low-level document
 API has the same six-platform requirement. Only scanning is restricted to mobile.
-This is a release requirement; desktop/browser licensing and the browser import
-and storage boundary are unfinished in the current development integration.
+The source integration includes desktop files and browser IndexedDB/byte adapters.
+All three full SDK imports compile for web and pass synthetic browser API
+round trips. This does not certify protected customer packages or full Microsoft
+feature parity. See [storage](storage.md) and [platforms](platforms.md).
+Windows runtime acceptance is tracked in [Windows validation](windows-validation.md).
 
 `AresWordEditor(sdk: sdk, documentPath: path)` embeds the domain editor and its
 editing controls. It checks the SDK licence and the document domain before
-loading. Use a valid absolute file path from scanning or your document picker.
+loading. Use an absolute native path, or a virtual path returned by browser storage.
+Import browser picker bytes with `sdk.loadBytes`; export with `sdk.exportBytes`.
 
 Pass an `AresOfficeViewerController` to observe readiness and the current
 document. The lifecycle callbacks are `onDocumentReady`, `onDocumentModified`,

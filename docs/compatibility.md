@@ -1,6 +1,6 @@
 # Compatibility and feature limits
 
-Word bookmarks, supported tracked-revision review, legacy comments and supported Word 2013 thread replies/status have dedicated APIs. Rich-text selection fidelity, pagination/sections, fields/citations, modern comment formats, compare, mail merge and the remaining Microsoft feature set are unfinished. Protected/unsupported graph structures may be read-only.
+Word bookmarks, supported tracked-revision review, legacy comments and supported Word 2013 replies/status/plain-body editing/whole-thread deletion have dedicated APIs. Rich-text selection fidelity, pagination/sections, fields/citations, modern comment formats, compare, mail merge and the remaining Microsoft feature set are unfinished. Protected/unsupported graph structures may be read-only.
 
 New scanner output uses `.docx`. Native templates and supported macro-enabled
 containers may preserve parts, but macro/VBA execution is not provided by that

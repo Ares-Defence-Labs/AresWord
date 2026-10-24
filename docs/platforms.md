@@ -14,7 +14,8 @@
 The desktop/web editor and API scope must not be reduced to viewing or extraction.
 Creation, editing, rendering, save/reopen, undo/redo, licensing and the supported
 file-format feature set must work on every target. The native camera, crop and
-OCR workflow is Android/iOS only, including when the browser runs on a phone.
+OCR workflow is available only in native Android/iOS apps. Web scanning is
+unavailable, including browsers running on phones.
 
 `AresOfficePlatforms.editorTargets` and `documentApiTargets` record the six-platform
 requirement; they are not runtime certification. `scannerTargets` contains only
@@ -25,17 +26,33 @@ editor code. Use it to hide Scan actions outside mobile.
 
 ## Current implementation gaps
 
-The development licence gate currently uses a private Android/iOS plugin.
-Desktop/browser licensing is unfinished. The full editor/API import also reaches
-`dart:io` and mobile camera/OCR dependencies. It must be separated with conditional
-adapters before claiming browser support. Changing pubspec platform metadata alone
-does not establish support.
+The source has conditional file/path adapters, native desktop files, durable
+IndexedDB browser documents and byte import/export. All three full SDKs compile
+for web and pass synthetic licensed document round trips in an isolated test
+fixture. Browser media uses local Blob URLs; Windows/Linux media use a native
+backend. Codec support depends on the runtime and must be verified per platform.
 
-Native desktop hosts need file-picker/storage adapters and protected licensed
-processing builds. Browser hosts need byte/document-handle and asynchronous
-storage/download adapters without `dart:io`, plus the protected browser processing
-and licensing boundary. Mobile imports must not be required to compile or use
-desktop/web editors and APIs. These are mandatory release gates.
+Android/iOS retain native product verification. Desktop/web verify signed
+customer-wide grants; app-bound and owner/admin grants fail closed there. See
+[licensing](licensing.md). Browser document processing does not invoke a native
+camera or require camera permission. Scan actions are hidden outside Android/iOS.
+
+Current source evidence: 1,061 regression tests passed (one existing skip).
+Linux ARM64 passed 37 licensing/storage/byte/guard tests and 17 editor checks.
+All three browser editors saved UI edits verified in fresh-page ZIP bytes; the
+browser API round trips and local WAV media path passed. A disposable macOS 14
+host built and ran all three SDK API round trips. macOS UI interaction and
+clean-host customer installations remain unverified. These checks use synthetic
+documents and isolated ephemeral test trust, not production customer/admin grants.
+
+The current private dependency graph requires macOS 14 because of ONNX even
+though scanning is mobile-only. Final modular dependencies and minimum OS
+contracts are release gates; do not infer a customer minimum from this test host.
+
+Protected processing binaries, customer installation and exact-candidate runtime
+certification remain release gates. Windows runtime checks are explicitly deferred
+to the customer team because no Windows runner is available. Source tests, a web
+build or platform metadata alone do not establish full platform certification.
 
 The source requires Dart ^3.12.0 and Flutter >=3.44.0. Final customer minimum OS
 versions and native ABIs remain to be certified; the reference Edge native build

@@ -10,6 +10,14 @@ site must be validated against the protected candidate before release.
 ```dart
 AresWordSdk({required super.licenceKey, super.verifyLicence});
 
+Future<AresOfficeSaveResult> insertImage(
+    String path, {
+    required Uint8List bytes,
+    required String fileName,
+    required int afterSectionIndex,
+    String? expectedSourceFingerprint,
+  });
+
 Future<AresWordCommentsSnapshot> inspectComments(String path);
 
 Future<List<AresWordComment>> comments(String path);
@@ -26,10 +34,32 @@ Future<AresWordCommentCreationResult> addComment(
     String? expectedSourceFingerprint,
   });
 
+Future<AresWordCommentCreationResult> addCommentThread(
+    String path, {
+    required int sectionIndex,
+    required String text,
+    required String author,
+    String? initials,
+    int? startOffset,
+    int? endOffset,
+    DateTime? date,
+    String? expectedSourceFingerprint,
+  });
+
+Future<AresWordCommentOperationResult> migrateLegacyComments(
+    String path, {
+    String? expectedSourceFingerprint,
+  });
+
 Future<AresWordCommentOperationResult> replaceCommentText(
     String path,
     String id,
     String text, {
+    String? expectedSourceFingerprint,
+  });
+
+Future<AresWordCommentOperationResult> removeAllLegacyComments(
+    String path, {
     String? expectedSourceFingerprint,
   });
 
@@ -53,6 +83,25 @@ Future<AresWordCommentOperationResult> replyToComment(
     String? expectedSourceFingerprint,
   });
 
+Future<AresWordCommentOperationResult> replaceThreadCommentText(
+    String path,
+    String id,
+    String text, {
+    String? expectedSourceFingerprint,
+  });
+
+Future<AresWordCommentOperationResult> removeCommentReply(
+    String path,
+    String commentId, {
+    String? expectedSourceFingerprint,
+  });
+
+Future<AresWordCommentOperationResult> removeCommentThread(
+    String path,
+    String rootCommentId, {
+    String? expectedSourceFingerprint,
+  });
+
 Future<AresWordCommentOperationResult> setCommentThreadResolved(
     String path,
     String rootCommentId, {
@@ -68,6 +117,17 @@ Future<AresOfficePageOperationResult> addBookmark(
     required String name,
     int? startOffset,
     int? endOffset,
+    int? endSectionIndex,
+    String? expectedSourceFingerprint,
+  });
+
+Future<AresOfficePageOperationResult> redefineBookmark(
+    String path, {
+    required String name,
+    required int sectionIndex,
+    int? startOffset,
+    int? endOffset,
+    int? endSectionIndex,
     String? expectedSourceFingerprint,
   });
 
@@ -85,6 +145,13 @@ Future<AresOfficePageOperationResult> removeBookmark(
   });
 
 Future<List<AresWordRevision>> revisions(String path);
+
+Future<AresOfficePageOperationResult> reviewRevisions(
+    String path,
+    List<AresWordRevision> revisions,
+    AresWordRevisionDecision decision, {
+    String? expectedSourceFingerprint,
+  });
 
 Future<AresOfficePageOperationResult> reviewRevision(
     String path,
@@ -131,6 +198,46 @@ Future<AresOfficeSaveResult> saveAsTemplate({
 Future<void> authorize();
 
 Future<AresOfficeDocument> load(String path);
+
+Future<List<AresOfficeAnnotation>> readAnnotations(String path);
+
+Future<AresOfficeSaveResult> replaceAnnotations(
+    String path, {
+    required Iterable<AresOfficeAnnotation> annotations,
+    String? expectedSourceFingerprint,
+  });
+
+Future<(AresOfficeSaveResult, AresOfficeAnnotation)> embedMedia(
+    String path, {
+    required Uint8List bytes,
+    required String fileName,
+    required int sectionIndex,
+    Rect? initialRect,
+    Map<String, Object?> metadata = const {},
+    String? expectedSourceFingerprint,
+  });
+
+Future<AresOfficeSaveResult> confirmMediaPlacement(
+    String path,
+    String id,
+    Rect rect, {
+    String? expectedSourceFingerprint,
+  });
+
+Future<AresOfficeSaveResult> discardPendingMedia(
+    String path,
+    String id, {
+    String? expectedSourceFingerprint,
+  });
+
+Future<AresOfficeDocument> loadBytes({
+    required String name,
+    required List<int> bytes,
+    String? path,
+    bool overwrite = false,
+  });
+
+Future<Uint8List> exportBytes(String path);
 
 Future<AresDomainEditSession> edit(AresOfficeDocument document);
 
@@ -248,3 +355,92 @@ See [scanning](scanning.md), [editor lifecycle](editor.md) and the compilable
 [integration example](../examples/scan_and_edit.dart). Exceptions include
 `AresOfficeLicenceException`, invalid-domain/path errors and unsupported package
 operations. Preserve the original on a failed edit and present a recoverable error.
+
+
+## Domain edit-session signatures
+
+Selected inherited session declarations relevant to this product; operations still enforce format and structure limits. See [full exported declarations](api-types.md) for helper/model types.
+
+```dart
+AresOfficeDocument get originalDocument;
+AresOfficeDocument get document;
+bool get isDirty;
+bool get canUndo;
+bool get canRedo;
+List<({int sectionIndex, AresWordFormField field})> get wordFormFieldLocations;
+List<AresWordFormField> get wordFormFields;
+void setWordHeaderFooter(AresWordHeaderFooterKind kind, {AresWordHeaderFooterVariant variant = AresWordHeaderFooterVariant.defaultPages, String? text, AresWordPageNumberAlignment? textAlignment, bool? textBold, bool? textItalic, bool? textUnderline, double? textFontSize, bool? pageNumber, AresWordPageNumberAlignment pageNumberAlignment = AresWordPageNumberAlignment.center, AresWordPageNumberFormat? pageNumberFormat, int? pageNumberStart});
+void setWordPageNumbers({required bool enabled, AresWordHeaderFooterKind? kind, AresWordPageNumberAlignment alignment = AresWordPageNumberAlignment.center, AresWordPageNumberFormat? format, int? start});
+void setWordFormValue(int sectionIndex, String id, String value, {bool? checked});
+void clearWordContentControls(int sectionIndex);
+void flattenWordContentControls(int sectionIndex);
+void updateWordFormField(int sectionIndex, AresWordFormField field);
+void deleteWordFormField(int sectionIndex, String id);
+AresWordFormField duplicateWordFormField(int sectionIndex, AresWordFormField field);
+void setWordFormTabOrder(List<String> ids);
+void replaceSectionText(int sectionIndex, String text);
+void replaceWordTextRange(int sectionIndex, int start, int end, String replacement);
+void replaceWordTextRangePreservingRuns(int sectionIndex, int start, int end, String replacement);
+void replaceWordTextRangeWithFormatting(int sectionIndex, int start, int end, String replacement, AresOfficeFormatChange style);
+void insertWordParagraph(int afterIndex, String text);
+void insertWordReferenceParagraph(int afterIndex, {required String title, required String text, String? fieldInstruction, String prefix = '', String suffix = '', bool superscript = false});
+void insertWordContentControl(int afterIndex, AresWordContentControlType type, {required String label, List<String> options = const <String>[]});
+void insertWordFormField(int afterIndex, AresWordFormField field);
+void insertWordBreak(int afterIndex, AresWordBreakType type);
+void insertWordPageBreakAtTextRange(int sectionIndex, int start, int end);
+void insertWordHyperlink(int afterIndex, String text, String address);
+({String text, String address})? wordHyperlinkAt(int sectionIndex);
+void updateWordHyperlink(int sectionIndex, String text, String address);
+void removeWordHyperlink(int sectionIndex);
+void insertWordTable(int afterIndex, int rows, int columns);
+void editWordTableAxis(int sectionIndex, int index, {required bool column, required bool insert});
+void resizeWordTable(int sectionIndex, int rows, int columns);
+void setWordTableCell(int sectionIndex, int row, int column, String value, {int? fillColorArgb, String? verticalAlignment, String? textDirection, String? tableLayout, String? borderPreset, double? cellMarginPoints, double? columnWidthPoints, double? rowHeightPoints, String? rowHeightRule, bool? repeatHeaderRow, bool? preventRowSplit});
+void applyWordTableStylePreset(int sectionIndex, AresWordTableStylePreset preset);
+void mergeWordTableCells(int sectionIndex, String range, {bool split = false});
+void deleteWordBlock(int index);
+void moveWordBlock(int index, int destination);
+void formatWordTextRange(int sectionIndex, int start, int end, AresOfficeFormatChange style);
+void clearWordTextRangeFormatting(int sectionIndex, int start, int end);
+void clearWordParagraphFormatting(int sectionIndex);
+void mergeWordParagraphWithNext(int index);
+void splitWordParagraph(int index, int offset);
+void replaceWordTextRangeWithParagraphs(int index, int start, int end, String replacement);
+bool wordParagraphHasListFormatting(int index);
+int? wordParagraphListLevel(int index);
+double? wordParagraphLeftIndentPoints(int index);
+String? wordParagraphListKind(int index);
+String wordParagraphStyleId(int index);
+void setWordParagraphStyle(int index, String styleId);
+void exitWordList(int index);
+void setWordListKind(int index, String? kind);
+void adjustWordListLevel(int index, int delta);
+void applyTransitionToAll(int sectionIndex);
+void setSpeakerNotes(int sectionIndex, String text);
+void renameSection(int sectionIndex, String title);
+void applyFormatting(AresOfficeFormatChange change);
+AresOfficeFormatChange formattingFor({required int sectionIndex, int? row, int? column});
+int replaceAll(String query, String replacement, {bool matchCase = false, bool wholeWords = false, bool includePresentationNotes = false});
+int redactAll(String query, {String replacement = '[REDACTED]', bool matchCase = false, bool wholeWords = false, bool includePresentationNotes = false});
+void securelyRedactWordSection(int sectionIndex);
+void undo();
+void redo();
+void refreshPackageMetadata(AresOfficeDocument refreshed);
+void markSaved(AresOfficeDocument savedDocument);
+void markSnapshotSaved(AresOfficeDocument savedDocument, AresOfficeDocument savedSnapshot);
+void reset();
+```
+
+Saved-session history extensions (inherited by the domain alias):
+
+```dart
+final AresDomainSdk sdk;
+bool get canUndoSaved;
+bool get canRedoSaved;
+Future<bool> undoSaved();
+Future<bool> redoSaved();
+void dispose();
+void markSaved(AresOfficeDocument savedDocument);
+void refreshPackageMetadata(AresOfficeDocument refreshed);
+void markSnapshotSaved(AresOfficeDocument savedDocument, AresOfficeDocument savedSnapshot);
+```

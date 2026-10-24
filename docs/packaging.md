@@ -15,6 +15,7 @@ ares_word/
   lib/src/                    # thin adapters, no private processing engine
   android/                    # compiled product AAR and minimal registration
   ios/                        # stripped device/simulator XCFramework and registration
+  macos/Binaries/             # checksum-bound local .xcframework.zip artifacts
   docs/assets/screenshots/    # readable documentation only
   LICENSE                     # reviewed customer terms
   THIRD_PARTY_NOTICES.md       # dependency/model/font redistribution notices
@@ -28,6 +29,16 @@ and a protected browser-compatible adapter/runtime, with licensing on all six
 targets. Exact registration class names,
 ABI versions, resources and native dependencies must be determined from working
 builds; none are fabricated in the blueprint.
+
+Final Android shared libraries and the exact consumer APK must pass 16 KB
+ELF LOAD/RELRO and ZIP-offset checks plus a real 16 KB runtime test. Flags on
+static archives alone cannot prove compatibility. macOS versioned frameworks must
+retain bytes, modes and internal symlinks inside checksum-bound local
+`.xcframework.zip` artifacts: pub materializes outer-package symlinks and can break
+strict signatures. SwiftPM local ZIP and CocoaPods verified extraction both need
+clean release consumer builds and complete-app deep strict codesign. These checks
+follow the corrected PDF process; PDF receipts do not certify Office artifacts.
+All four new artifact/consumer acceptance flags remain false until verified.
 
 Exclude private source/helpers, issuer tooling, owner grants/store assets,
 development model delivery, test-only trust, credentials, debug maps, build caches

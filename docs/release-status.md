@@ -17,12 +17,13 @@ from the customer binaries that still need to be built.
 2. Build independent product-scoped native camera binaries; the public Edge customer build does not expose the private Office verification channel.
 3. Implement and verify each product's authenticated encrypted model reader and resources; the proposed Office .aem names are reserved, not built artifacts.
 4. Replace private path dependencies, dependency overrides, owner asset-delivery and source exports with audited redistributable dependencies and adapters.
-5. Implement product licensing on all six editor/API platforms; current verification only uses the private mobile plugin. Isolate mobile camera/OCR and dart:io from browser editor/document entry points; provide browser byte/storage adapters and desktop file adapters.
+5. Source customer-wide licensing and native/browser storage adapters are implemented. Finish genuine desktop/web app-bound and owner identity verification, protected release enforcement and runtime certification; Windows runtime testing is deferred to the customer team.
 6. Audit redistribution rights and include complete third-party notices, model/font licences and final customer licence terms.
 7. Freeze and document the final public API; current inherited/exported core surfaces need a domain-isolation and bypass review.
 8. Complete nested artifact, plaintext-model hash, secret, ABI, product isolation and sandbox/production trust checks on real release binaries.
 9. Complete clean-host installation, editor and low-level API parity on Android/iOS/macOS/Windows/Linux/web, plus Android/iOS capture-review-edit-save device tests on those exact candidates.
-10. Run pub.dev dry-run in a disposable copy, then hash the unchanged reviewed package and record build provenance; publication requires a separate instruction.
+10. Verify final Android shared-library and consumer-APK 16 KB alignment on exact artifacts and a real 16 KB runtime. Preserve macOS versioned frameworks in checksum-bound local XCFramework ZIPs and verify SwiftPM/CocoaPods release consumers with complete-app deep strict codesign; PDF artifacts do not certify Office.
+11. Run pub.dev dry-run in a disposable copy, then hash the unchanged reviewed package and record build provenance; publication requires a separate instruction.
 
 The broader Microsoft feature parity target is unfinished. See
 [compatibility](compatibility.md). Neither passing source tests nor generating
